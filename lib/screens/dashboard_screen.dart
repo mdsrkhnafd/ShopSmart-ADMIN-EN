@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop_smart_admin_en/widgets/dashboard_btns.dart';
 import '../providers/theme_provider.dart';
 import '../services/assets_manager.dart';
 import '../widgets/title_text.dart';
@@ -35,9 +36,8 @@ class DashboardScreenState extends State<DashboardScreen> {
           ),
         ],
       ),
-      body: const Center(
-        child: TitlesTextWidget(label: "Dashboard Screen "),
-      ),
+      body: GridView.count(crossAxisCount: 2,
+      children: List.generate(5, (index) => const DashboardButtonsWidget()),)
     );
   }
 }
