@@ -31,9 +31,16 @@ class _EditOrUploadProductScreenState extends State<EditOrUploadProductScreen> {
       _descriptionController,
       _quantityController;
   String? _categoryValue;
+  bool isEditing = false;
+  String? productNetworkImage;
 
   @override
   void initState() {
+    if(widget.productModel != null) {
+      isEditing = true;
+      productNetworkImage = widget.productModel!.productImage;
+      _categoryValue = widget.productModel!.productCategory;
+    }
     _titleController = TextEditingController(text: widget.productModel?.productTitle);
     _priceController = TextEditingController(text: widget.productModel?.productPrice);
     _descriptionController = TextEditingController(text: widget.productModel?.productDescription);
@@ -62,6 +69,7 @@ class _EditOrUploadProductScreenState extends State<EditOrUploadProductScreen> {
   void removePickedImage() {
     setState(() {
       _pickedImage = null;
+      productNetworkImage = null;
     });
   }
 
@@ -83,7 +91,7 @@ class _EditOrUploadProductScreenState extends State<EditOrUploadProductScreen> {
   Future<void> _editProduct() async {
     final isValid = _formKey.currentState!.validate();
     FocusScope.of(context).unfocus();
-    if (_pickedImage == null) {
+    if (_pickedImage == null && productNetworkImage == null) {
       MyAppFunctions.showErrorOrWarningDialog(
         context: context,
         subtitle: "Please pick up an image",
@@ -146,7 +154,9 @@ class _EditOrUploadProductScreenState extends State<EditOrUploadProductScreen> {
                       fontSize: 20,
                     ),
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    clearForm();
+                  },
                 ),
                 ElevatedButton.icon(
                   style: ElevatedButton.styleFrom(
@@ -159,11 +169,16 @@ class _EditOrUploadProductScreenState extends State<EditOrUploadProductScreen> {
                     ),
                   ),
                   icon: const Icon(Icons.upload),
-                  label: const Text(
-                    "Upload Product",
+                  label: Text(
+                    isEditing ? "Edit Product" : "Upload Product",
                   ),
                   onPressed: () {
-                    _uploadProduct();
+                    if(isEditing) {
+                      _editProduct();
+                    }
+                    else {
+                      _uploadProduct();
+                    }
                   },
                 ),
               ],
@@ -172,8 +187,8 @@ class _EditOrUploadProductScreenState extends State<EditOrUploadProductScreen> {
         ),
         appBar: AppBar(
           centerTitle: true,
-          title: const TitlesTextWidget(
-            label: "Upload a new product",
+          title:  TitlesTextWidget(
+            label: isEditing ? "Edit Product" : "Upload a new product",
           ),
         ),
         body: SafeArea(
@@ -185,7 +200,17 @@ class _EditOrUploadProductScreenState extends State<EditOrUploadProductScreen> {
                 ),
 
                 // Image Picker
-                if (_pickedImage == null) ...[
+                if(isEditing && productNetworkImage != null)...[
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: Image.network(
+                      productNetworkImage!,
+                      height: size.width * 0.5,
+                      alignment: Alignment.center,
+                    ),
+                  ),
+                ]
+                else if (_pickedImage == null) ...[
                   SizedBox(
                     width: size.width * 0.4 + 10,
                     height: size.width * 0.4,
@@ -222,7 +247,7 @@ class _EditOrUploadProductScreenState extends State<EditOrUploadProductScreen> {
                   ),
                 ],
 
-                if (_pickedImage != null) ...[
+                if (_pickedImage != null || productNetworkImage != null) ...[
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
