@@ -20,5 +20,5 @@ class AssetsManager {
   static String pc = "$categoriesImagesPath/pc.png";
 
   static String order = "$dashboardImagesPath/order.png";
-  static String cloud = "$dashboardImagesPath/cloud.png";
+  static String cloud = "$dashboardImagesPath/cloud.jpg";
 }
