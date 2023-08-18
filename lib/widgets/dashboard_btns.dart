@@ -3,13 +3,16 @@ import 'package:shop_smart_admin_en/services/assets_manager.dart';
 import 'package:shop_smart_admin_en/widgets/subtitle_text.dart';
 
 class DashboardButtonsWidget extends StatelessWidget {
-  const DashboardButtonsWidget({super.key});
+  const DashboardButtonsWidget({super.key, required this.text, required this.imagePath, required this.onPressed});
+
+  final String text , imagePath;
+  final Function onPressed;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-
+         onPressed();
       },
       child: Padding(
         padding: const EdgeInsets.all(4.0),
@@ -18,11 +21,11 @@ class DashboardButtonsWidget extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Image.asset(AssetsManager.book ,height: 65, width: 65,),
+                Image.asset(imagePath ,height: 65, width: 65,),
                 const SizedBox(
                   height: 10,
                 ),
-                const SubtitleTextWidget(label: "Subtitle")
+                SubtitleTextWidget(label: text)
               ],
             ),
           ),
