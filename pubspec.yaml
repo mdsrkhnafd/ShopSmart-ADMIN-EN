@@ -50,6 +50,10 @@ dependencies:
   # Utils
   uuid: ^3.0.7
   dotted_border: ^2.0.0+3
+  # Firebase
+  firebase_core: ^2.14.0
+  cloud_firestore: ^4.8.5
+  firebase_storage: ^11.2.3
 
 dev_dependencies:
   flutter_test:
