@@ -2,7 +2,6 @@ import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_smart_admin_en/screens/edit_upload_product_form.dart';
-
 import '../providers/products_provider.dart';
 import 'subtitle_text.dart';
 import 'title_text.dart';
