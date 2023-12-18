@@ -103,13 +103,14 @@ class _EditOrUploadProductScreenState extends State<EditOrUploadProductScreen> {
         setState(() {
           isLoading = true;
         });
-
+        final productId = Uuid().v4();
         final ref = FirebaseStorage.instance
             .ref("productsImages")
-            .child("${_titleController.text.trim()}.jpg");
+            .child("$productId.jpg");
         await ref.putFile(File(_pickedImage!.path));
         productImageUrl = await ref.getDownloadURL();
-        final productId = Uuid().v4();
+
+
         await FirebaseFirestore.instance
             .collection("products")
             .doc(productId)
@@ -143,8 +144,7 @@ class _EditOrUploadProductScreenState extends State<EditOrUploadProductScreen> {
         );
       } catch (error) {
         await MyAppFunctions.showErrorOrWarningDialog(
-            context: context, subtitle: error.toString(), fct: () {
-        });
+            context: context, subtitle: error.toString(), fct: () {});
       } finally {
         setState(() {
           isLoading = false;
@@ -159,12 +159,68 @@ class _EditOrUploadProductScreenState extends State<EditOrUploadProductScreen> {
     if (_pickedImage == null && productNetworkImage == null) {
       MyAppFunctions.showErrorOrWarningDialog(
         context: context,
-        subtitle: "Please pick up an image",
+        subtitle: 'Please pick up an image',
         fct: () {},
       );
-      return;
+      return ;
     }
-    if (isValid) {}
+    if (isValid) {
+      _formKey.currentState!.save();
+
+      try {
+        setState(() {
+          isLoading = true;
+        });
+
+        if(_pickedImage != null) {
+          final ref = FirebaseStorage.instance
+              .ref("productsImages")
+              .child("${widget.productModel!.productId}.jpg");
+          await ref.putFile(File(_pickedImage!.path));
+          productImageUrl = await ref.getDownloadURL();
+        }
+
+
+        await FirebaseFirestore.instance
+            .collection("products")
+            .doc(widget.productModel!.productId)
+            .update({
+          "productId": widget.productModel!.productId,
+          "productTitle": _titleController.text,
+          "productPrice": _priceController.text,
+          "productImage": productImageUrl ?? productNetworkImage,
+          "productCategory": _categoryValue,
+          "productDescription": _descriptionController.text,
+          "productQuantity": _quantityController.text,
+          "createdAt": widget.productModel!.createdAt,
+        });
+        Fluttertoast.showToast(
+          msg: "Product has been edited",
+          textColor: Colors.white,
+        );
+        if (!mounted) return;
+        MyAppFunctions.showErrorOrWarningDialog(
+            isError: false,
+            context: context,
+            subtitle: "Clear Form?",
+            fct: () {
+              clearForm();
+            });
+      } on FirebaseException catch (error) {
+        await MyAppFunctions.showErrorOrWarningDialog(
+          context: context,
+          subtitle: error.message.toString(),
+          fct: () {},
+        );
+      } catch (error) {
+        await MyAppFunctions.showErrorOrWarningDialog(
+            context: context, subtitle: error.toString(), fct: () {});
+      } finally {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
   }
 
   Future<void> localImagePicker() async {
@@ -173,11 +229,15 @@ class _EditOrUploadProductScreenState extends State<EditOrUploadProductScreen> {
       context: context,
       cameraFCT: () async {
         _pickedImage = await picker.pickImage(source: ImageSource.camera);
-        setState(() {});
+        setState(() {
+          productNetworkImage == null;
+        });
       },
       galleryFCT: () async {
         _pickedImage = await picker.pickImage(source: ImageSource.gallery);
-        setState(() {});
+        setState(() {
+          productNetworkImage == null;
+        });
       },
       removeFCT: () {
         setState(() {
@@ -373,7 +433,8 @@ class _EditOrUploadProductScreenState extends State<EditOrUploadProductScreen> {
                             validator: (value) {
                               return MyValidators.uploadProdTexts(
                                 value: value,
-                                toBeReturnedString: "Please enter a valid title",
+                                toBeReturnedString:
+                                    "Please enter a valid title",
                               );
                             },
                           ),

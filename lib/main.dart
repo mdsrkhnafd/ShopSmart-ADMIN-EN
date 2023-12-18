@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop_smart_admin_en/providers/products_provider.dart';
 
 import 'consts/theme_data.dart';
-import 'providers/products_provider.dart';
 import 'providers/theme_provider.dart';
 import 'screens/dashboard_screen.dart';
 import 'screens/edit_upload_product_form.dart';
