@@ -9,9 +9,10 @@ class EmptyBagWidget extends StatelessWidget {
     required this.imagePath,
     required this.title,
     required this.subtitle,
+    required this.buttonText,
   });
 
-  final String imagePath, title, subtitle;
+  final String imagePath, title, subtitle ,buttonText;
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -55,6 +56,15 @@ class EmptyBagWidget extends StatelessWidget {
           const SizedBox(
             height: 20,
           ),
+          // ElevatedButton(
+          //   style: ElevatedButton.styleFrom(
+          //       padding: const EdgeInsets.all(20.0), elevation: 0),
+          //   onPressed: () {},
+          //   child: Text(
+          //     buttonText,
+          //     style: const TextStyle(fontSize: 22),
+          //   ),
+          // ),
         ],
       ),
     );

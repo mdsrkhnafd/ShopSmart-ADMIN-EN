@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop_smart_admin_en/providers/order_provider.dart';
 import 'package:shop_smart_admin_en/providers/products_provider.dart';
 
 import 'consts/theme_data.dart';
@@ -49,6 +50,9 @@ class MyApp extends StatelessWidget {
               }),
               ChangeNotifierProvider(create: (_) {
                 return ProductsProvider();
+              }),
+              ChangeNotifierProvider(create: (_) {
+                return OrderProvider();
               }),
             ],
             child: Consumer<ThemeProvider>(

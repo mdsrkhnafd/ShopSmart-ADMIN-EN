@@ -2,6 +2,7 @@ class AssetsManager {
   static String imagesPath = "assets/images";
   static String categoriesImagesPath = "assets/images/categories";
   static String dashboardImagesPath = "assets/images/dashboard";
+  static String bagImagesPath = "assets/images/bag";
 
 // general images
   static String warning = "$imagesPath/warning.png";
@@ -21,4 +22,5 @@ class AssetsManager {
 
   static String order = "$dashboardImagesPath/order.png";
   static String cloud = "$dashboardImagesPath/cloud.jpg";
+  static String orderBag = "$bagImagesPath/order.png";
 }
