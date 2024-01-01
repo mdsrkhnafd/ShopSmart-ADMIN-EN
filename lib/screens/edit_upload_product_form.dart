@@ -35,6 +35,7 @@ class _EditOrUploadProductScreenState extends State<EditOrUploadProductScreen> {
   late TextEditingController _titleController,
       _priceController,
       _descriptionController,
+      _ratingController,
       _quantityController;
   String? _categoryValue;
   bool isEditing = false;
@@ -55,8 +56,8 @@ class _EditOrUploadProductScreenState extends State<EditOrUploadProductScreen> {
         TextEditingController(text: widget.productModel?.productPrice);
     _descriptionController =
         TextEditingController(text: widget.productModel?.productDescription);
-    _quantityController =
-        TextEditingController(text: widget.productModel?.productQuantity);
+    _quantityController = TextEditingController(text: widget.productModel?.productQuantity);
+    _ratingController = TextEditingController(text: widget.productModel?.productRatings);
 
     super.initState();
   }
@@ -67,6 +68,7 @@ class _EditOrUploadProductScreenState extends State<EditOrUploadProductScreen> {
     _priceController.dispose();
     _descriptionController.dispose();
     _quantityController.dispose();
+    _ratingController.dispose();
     super.dispose();
   }
 
@@ -75,6 +77,7 @@ class _EditOrUploadProductScreenState extends State<EditOrUploadProductScreen> {
     _priceController.clear();
     _descriptionController.clear();
     _quantityController.clear();
+    _ratingController.clear();
     removePickedImage();
   }
 
@@ -92,6 +95,16 @@ class _EditOrUploadProductScreenState extends State<EditOrUploadProductScreen> {
       MyAppFunctions.showErrorOrWarningDialog(
         context: context,
         subtitle: "Make sure to pick up an image",
+        fct: () {},
+      );
+      return;
+    }
+    // Validate the form
+    if (_categoryValue == null || _categoryValue!.isEmpty) {
+      // Show an error message
+      MyAppFunctions.showErrorOrWarningDialog(
+        context: context,
+        subtitle: "Please choose a category",
         fct: () {},
       );
       return;
@@ -122,6 +135,7 @@ class _EditOrUploadProductScreenState extends State<EditOrUploadProductScreen> {
           "productCategory": _categoryValue,
           "productDescription": _descriptionController.text,
           "productQuantity": _quantityController.text,
+          "productRatings": _ratingController.text,
           "createdAt": Timestamp.now(),
         });
         Fluttertoast.showToast(
@@ -192,6 +206,7 @@ class _EditOrUploadProductScreenState extends State<EditOrUploadProductScreen> {
           "productCategory": _categoryValue,
           "productDescription": _descriptionController.text,
           "productQuantity": _quantityController.text,
+          "productRatings": _ratingController.text,
           "createdAt": widget.productModel!.createdAt,
         });
         Fluttertoast.showToast(
@@ -419,24 +434,55 @@ class _EditOrUploadProductScreenState extends State<EditOrUploadProductScreen> {
                       key: _formKey,
                       child: Column(
                         children: [
-                          TextFormField(
-                            controller: _titleController,
-                            key: const ValueKey('Title'),
-                            maxLength: 80,
-                            minLines: 1,
-                            maxLines: 2,
-                            keyboardType: TextInputType.multiline,
-                            textInputAction: TextInputAction.newline,
-                            decoration: const InputDecoration(
-                              hintText: 'Product Title',
-                            ),
-                            validator: (value) {
-                              return MyValidators.uploadProdTexts(
-                                value: value,
-                                toBeReturnedString:
-                                    "Please enter a valid title",
-                              );
-                            },
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Flexible(
+                                flex: 1,
+                                child: TextFormField(
+                                  controller: _titleController,
+                                  key: const ValueKey('Title'),
+                                  maxLength: 80,
+                                  minLines: 1,
+                                  maxLines: 2,
+                                  keyboardType: TextInputType.multiline,
+                                  textInputAction: TextInputAction.newline,
+                                  decoration: const InputDecoration(
+                                    hintText: 'Product Title',
+                                  ),
+                                  validator: (value) {
+                                    return MyValidators.uploadProdTexts(
+                                      value: value,
+                                      toBeReturnedString:
+                                          "Please enter a valid title",
+                                    );
+                                  },
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              Flexible(
+                                flex: 1,
+                                child: TextFormField(
+                                  controller: _ratingController,
+                                  key: const ValueKey('Ratings'),
+                                  keyboardType: TextInputType.number,
+                                  textInputAction: TextInputAction.newline,
+                                  decoration: const InputDecoration(
+                                    hintText: 'Product Ratings',
+                                  ),
+                                  validator: (value) {
+                                    return MyValidators.uploadProdTexts(
+                                      value: value,
+                                      toBeReturnedString:
+                                      "Please enter a valid ratings",
+                                    );
+                                  },
+                                ),
+                              ),
+                            ],
                           ),
                           const SizedBox(
                             height: 10,
