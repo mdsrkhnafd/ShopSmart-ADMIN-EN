@@ -8,6 +8,7 @@ class ProductModel with ChangeNotifier {
       productPrice,
       productCategory,
       productDescription,
+      productRatings,
       productImage,
       productQuantity;
   Timestamp? createdAt;
@@ -20,6 +21,7 @@ class ProductModel with ChangeNotifier {
     required this.productDescription,
     required this.productImage,
     required this.productQuantity,
+    required this.productRatings,
     this.createdAt,
   });
 
@@ -34,6 +36,7 @@ class ProductModel with ChangeNotifier {
         productDescription: data["productDescription"],
         productImage: data["productImage"],
         productQuantity: data["productQuantity"],
+        productRatings: data["productRatings"],
         createdAt: data["createdAt"],);
   }
 }
